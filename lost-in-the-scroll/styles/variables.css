@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap");
+
+:root {
+  /* Color tokens */
+  --color-surface-primary: #0b0b0b;
+  --color-surface-secondary: #121316;
+  --color-surface-tertiary: #17191f;
+  --color-surface-paper: #f7f7f7;
+  --color-text-primary: #f7f7f7;
+  --color-text-secondary: #b8bcc8;
+  --color-text-dark: #111218;
+  --color-border-strong: rgba(247, 247, 247, 0.36);
+  --color-border-soft: rgba(247, 247, 247, 0.14);
+  --color-accent: #1e5bff;
+  --color-alarm: #ff2a2a;
+  --color-debug: #00ff00;
+
+  /* Type tokens */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  --font-size-h1: clamp(2.5rem, 7.4vw, 7.2rem);
+  --font-size-h2: clamp(1.7rem, 4vw, 3rem);
+  --font-size-h3: clamp(1.3rem, 2.4vw, 1.8rem);
+  --font-size-body: clamp(1rem, 1.35vw, 1.25rem);
+  --font-size-small: 0.8125rem;
+  --font-size-massive: clamp(8rem, 20vw, 24rem);
+
+  /* Space tokens */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 7rem;
+
+  /* Motion tokens */
+  --duration-fast: 200ms;
+  --duration-medium: 500ms;
+  --duration-slow: 900ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Legacy aliases kept for current scene styles */
+  --color-bg: var(--color-surface-primary);
+  --color-text: var(--color-text-primary);
+  --color-dark: var(--color-surface-secondary);
+  --font-primary: var(--font-mono);
+  --transition-speed: var(--duration-medium);
+}

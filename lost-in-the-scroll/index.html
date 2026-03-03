@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lost in the Scroll</title>
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="section scroll-loader">
+        <div class="preloader" id="preloader">
+          <div class="pixel-grid">
+            <div class="pixel-row" id="top-row"></div>
+            <div class="pixel-row" id="bottom-row"></div>
+            <div class="pixel-column" id="left-column"></div>
+            <div class="pixel-column" id="right-column"></div>
+          </div>
+
+          <div class="counter-wrapper">
+            <div class="counter-outline" aria-hidden="true" id="counter-outline">0</div>
+            <div class="counter" id="counter">0</div>
+          </div>
+
+          <div class="text-container">
+            <div class="loading-text">LOADING SYSTEM</div>
+            <div class="system-messages">
+              <div class="message active">INITIALIZING</div>
+              <div class="message">DATA_TRANSFER</div>
+              <div class="message">COMPILING</div>
+              <div class="message">FINALIZING</div>
+              <div class="message">COMPLETE</div>
+            </div>
+          </div>
+
+          <div class="loading-bar-container">
+            <div class="loading-bar">
+              <div class="progress"></div>
+            </div>
+
+            <div class="loading-bar-markers">
+              <div class="marker" data-position="0">00</div>
+              <div class="marker" data-position="25">25</div>
+              <div class="marker" data-position="50">50</div>
+              <div class="marker" data-position="75">75</div>
+              <div class="marker" data-position="100">100</div>
+            </div>
+
+            <div class="connector-lines">
+              <div class="connector-line" id="line-0-25"></div>
+              <div class="connector-line" id="line-25-50"></div>
+              <div class="connector-line" id="line-50-75"></div>
+              <div class="connector-line" id="line-75-100"></div>
+            </div>
+          </div>
+
+          <div class="block-container">
+            <div class="block" id="block-1"></div>
+            <div class="block" id="block-2"></div>
+            <div class="block" id="block-3"></div>
+            <div class="block" id="block-4"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--hero content">
+        <div class="section__content">
+          <h1>SYSTEM READY</h1>
+          <p>MINIMAL INTERFACE ACTIVATED</p>
+        </div>
+      </section>
+
+      <section class="section section--control control-scene" aria-label="Opening Control Scene">
+        <div class="wire-grid" aria-hidden="true"></div>
+        <div class="section__content control-wrap">
+          <p class="control-side">01 OPENING I WANT CONTROL</p>
+          <div class="container">
+            <div class="hi">
+              <div class="hi__cuboid">
+                <div class="face face--front"><p class="hi__word">I WANT</p></div>
+                <div class="face face--back"><p class="hi__word">I WANT</p></div>
+                <div class="face face--top"><p class="hi__word">I WANT</p></div>
+                <div class="face face--bottom"><p class="hi__word">I WANT</p></div>
+              </div>
+              <div class="hi__cuboid">
+                <div class="face face--front"><p class="hi__word">TO CONTROL</p></div>
+                <div class="face face--back"><p class="hi__word">TO CONTROL</p></div>
+                <div class="face face--top"><p class="hi__word">TO CONTROL</p></div>
+                <div class="face face--bottom"><p class="hi__word">TO CONTROL</p></div>
+              </div>
+              <div class="hi__cuboid">
+                <div class="face face--front"><p class="hi__word">THE SYSTEM</p></div>
+                <div class="face face--back"><p class="hi__word">THE SYSTEM</p></div>
+                <div class="face face--top"><p class="hi__word">THE SYSTEM</p></div>
+                <div class="face face--bottom"><p class="hi__word">THE SYSTEM</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--log">
+        <div class="section__content log-stack">
+        <article class="log-entry log-entry--blue">
+          <header class="log-header">
+            <span class="log-number">01</span>
+            <h2>Opening - "I want control."</h2>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>Everything feels slippery and unpredictable. Type moves on its own. I click buttons that dodge me.</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">No concepts yet - just confusion</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">I realized the problem is not chaos - it is that I have no way to grab or direct anything. I need tools.</p>
+            <div class="log-notes">
+              <h3>VISUAL / ANIMATION NOTES</h3>
+              <p>Open on a dark screen. Text jitters subtly. A single button labeled "SYSTEM" floats in the center. User tries to click - it dodges slowly.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="log-entry">
+          <header class="log-header">
+            <span class="log-number">02</span>
+            <h2>First Contact - console.log / DevTools</h2>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>I can finally see what the type is doing. It is not random - it has a pattern. The console shows me the hidden instructions.</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">console.log() + browser DevTools</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">From "what is happening?" to "oh, I can see what is happening." Debugging becomes visibility, not magic.</p>
+          </div>
+        </article>
+
+        <article class="log-entry">
+          <header class="log-header">
+            <span class="log-number">03</span>
+            <h2>Naming Things - variables (let, const)</h2>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>Labeling type blocks so I can grab them again. Before, everything was anonymous. Now I can point and say "this one."</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">let, const, variable assignment</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">I stopped feeling like I was chasing ghosts. Variables gave me handles. I could reference the same thing twice.</p>
+            <div class="log-notes">
+              <h3>VISUAL / ANIMATION NOTES</h3>
+              <p>A word appears on screen. User hovers - it highlights. A label appears: "let headline = ..." The word becomes selectable.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="log-entry log-entry--red">
+          <header class="log-header">
+            <span class="log-number">04</span>
+            <h2>The Switch - conditionals + classList.toggle</h2>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>Rules that flip calm/chaos modes. "If the vibe is X, do Y." One click changes the entire visual state.</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">if/else statements + classList.toggle()</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">I realized I could design two states and flip between them. Control is not stopping motion - it is choreographing it.</p>
+          </div>
+        </article>
+
+        <article class="log-entry">
+          <header class="log-header">
+            <span class="log-number">05</span>
+            <h2>The Memory - localStorage</h2>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>The piece remembers yesterday's state. It does not reset every time. The chaos (or calm) persists.</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">localStorage.setItem() / .getItem()</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">The page stopped feeling like it forgot me. It became a space I could return to. Memory = continuity = relationship.</p>
+          </div>
+        </article>
+
+        <article class="log-entry log-entry--green">
+          <header class="log-header">
+            <span class="log-number">06</span>
+            <h2>Closing - "I do not control it fully, but I can choreograph it."</h2>
+            <span class="log-badge">STRETCH</span>
+          </header>
+          <div class="log-card">
+            <div class="log-grid">
+              <div>
+                <p class="chip chip--blue">METAPHOR MOMENT</p>
+                <p>The system still surprises me. But now I have the tools to shape how it surprises me. Bugs become features.</p>
+              </div>
+              <div>
+                <p class="chip chip--green">JS CONCEPT</p>
+                <p class="log-mono">All of the above + design tokens (stretch)</p>
+              </div>
+            </div>
+            <hr />
+            <p class="chip chip--red">WHAT SHIFTED</p>
+            <p class="log-quote">Learning is not about mastery. It is about building a relationship with a system that is always slightly out of reach.</p>
+          </div>
+        </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
