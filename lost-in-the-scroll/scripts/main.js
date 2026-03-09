@@ -240,6 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   if (letterGrid) {
+    const GRID_SIZE = 20;
     const totalCells = 20 * 20;
     let isPointerDown = false;
     let lastHoveredCell = null;
@@ -249,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < totalCells; i += 1) {
       const span = document.createElement("span");
       span.className = "letter-cell";
+      span.dataset.index = `${i}`;
       span.textContent = alphabet[Math.floor(Math.random() * alphabet.length)];
       letterGrid.appendChild(span);
       cells.push(span);
@@ -324,7 +326,26 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       lastHoveredCell = cell;
-      mutateCell(cell);
+
+      const centerIndex = Number(cell.dataset.index);
+      if (Number.isNaN(centerIndex)) {
+        mutateCell(cell);
+        return;
+      }
+
+      const centerRow = Math.floor(centerIndex / GRID_SIZE);
+      const centerCol = centerIndex % GRID_SIZE;
+
+      for (let rowOffset = -1; rowOffset <= 1; rowOffset += 1) {
+        for (let colOffset = -1; colOffset <= 1; colOffset += 1) {
+          const row = centerRow + rowOffset;
+          const col = centerCol + colOffset;
+          if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) {
+            continue;
+          }
+          mutateCell(cells[row * GRID_SIZE + col]);
+        }
+      }
     };
 
     letterGrid.addEventListener("pointerdown", (event) => {
