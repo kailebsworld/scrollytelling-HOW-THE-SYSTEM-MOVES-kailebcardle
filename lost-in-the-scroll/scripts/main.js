@@ -81,21 +81,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const sceneContainer = document.querySelector(".control-scene .container");
   const cuboids = document.querySelectorAll(".control-scene .hi__cuboid");
   const sceneWords = document.querySelectorAll(".control-scene .hi__word");
-  const wireGrid = document.querySelector(".wire-grid");
+  const storyGridWorld = document.querySelector(".story-grid-world");
   const controlScene = document.querySelector(".control-scene");
   const controlWrap = document.querySelector(".control-wrap");
   const contentScene = document.querySelector(".content");
   const contentInner = document.querySelector(".content > div");
+  const firstContactScene = document.querySelector(".section--first-contact");
+  const firstContactWrapper = document.getElementById("first-contact-wrapper");
   let winW = window.innerWidth;
   let winH = window.innerHeight;
 
   if (sceneContainer && cuboids.length && controlScene && controlWrap) {
-    gsap.set(sceneContainer, { autoAlpha: 1 });
+    gsap.set(sceneContainer, { autoAlpha: 1, xPercent: 22 });
     gsap.set(controlWrap, { autoAlpha: 0, y: 80, scale: 0.96 });
     gsap.set(cuboids, { yPercent: 80 });
     gsap.set(".control-side", { x: -35, autoAlpha: 0 });
 
-    if (contentScene && contentInner && wireGrid && controlWrap) {
+    if (contentScene && contentInner && storyGridWorld && controlWrap) {
       gsap
         .timeline({
           scrollTrigger: {
@@ -110,14 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
           {
             autoAlpha: 0,
             y: -120,
-            ease: "none"
-          },
-          0
-        )
-        .to(
-          wireGrid,
-          {
-            opacity: 0.82,
             ease: "none"
           },
           0
@@ -181,11 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
       end: "bottom top",
       scrub: true,
       onUpdate: (self) => {
-        const gridY = gsap.utils.mapRange(0, 1, 10, -10, self.progress);
         const wordY = gsap.utils.mapRange(0, 1, 120, -140, self.progress);
-        if (wireGrid) {
-          gsap.set(wireGrid, { yPercent: gridY });
-        }
         gsap.set(".hi", { y: wordY });
       }
     });
@@ -234,5 +224,291 @@ document.addEventListener("DOMContentLoaded", () => {
       winW = window.innerWidth;
       winH = window.innerHeight;
     });
+  }
+
+  const spinWrapper = document.getElementById("first-contact-wrapper");
+
+  if (spinWrapper) {
+    makeInstance("DEV CONTROLS", 10, 0.12, spinWrapper);
+  }
+
+  const letterGrid = document.getElementById("main-container");
+  const conditionalsScene = document.querySelector(".section--conditionals");
+  const conditionalsWrap = document.querySelector(".conditionals-wrap");
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  if (letterGrid) {
+    const totalCells = 20 * 20;
+    let isPointerDown = false;
+    let lastHoveredCell = null;
+    const cells = [];
+
+    for (let i = 0; i < totalCells; i += 1) {
+      const span = document.createElement("span");
+      span.className = "letter-cell";
+      span.textContent = alphabet[Math.floor(Math.random() * alphabet.length)];
+      letterGrid.appendChild(span);
+      cells.push(span);
+    }
+
+    const selectedCell = cells[9 * 20 + 7];
+    const targetCell = cells[10 * 20 + 14];
+    const warningCell = cells[7 * 20 + 16];
+
+    if (selectedCell) {
+      selectedCell.textContent = "W";
+      selectedCell.classList.add("is-selected");
+    }
+
+    if (targetCell) {
+      targetCell.textContent = "V";
+      targetCell.classList.add("is-target");
+    }
+
+    if (warningCell) {
+      warningCell.textContent = "F";
+      warningCell.classList.add("is-warning");
+    }
+
+    const mutateCell = (cell) => {
+      if (!cell || !cell.classList.contains("letter-cell")) {
+        return;
+      }
+
+      const currentLetter = cell.textContent;
+      let nextLetter = currentLetter;
+      const isPinnedCell =
+        cell.classList.contains("is-selected") ||
+        cell.classList.contains("is-target") ||
+        cell.classList.contains("is-warning");
+
+      if (!isPinnedCell) {
+        while (nextLetter === currentLetter) {
+          nextLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+      }
+
+      cell.textContent = nextLetter;
+      cell.classList.add("is-active");
+
+      gsap.killTweensOf(cell);
+      gsap.fromTo(
+        cell,
+        { rotateX: 0, rotateY: 0, color: "rgba(247, 247, 247, 1)" },
+        {
+          rotateX: 180,
+          rotateY: 180,
+          color: "rgba(247, 247, 247, 0.3)",
+          duration: 0.28,
+          ease: "power1.out",
+          clearProps: "color",
+          onComplete: () => {
+            cell.classList.remove("is-active");
+            gsap.to(cell, {
+              rotateX: 0,
+              rotateY: 0,
+              duration: 0.22,
+              ease: "power1.inOut"
+            });
+          }
+        }
+      );
+    };
+
+    const mutateFromPointer = (event) => {
+      const cell = event.target.closest(".letter-cell");
+      if (!cell || cell === lastHoveredCell) {
+        return;
+      }
+      lastHoveredCell = cell;
+      mutateCell(cell);
+    };
+
+    letterGrid.addEventListener("pointerdown", (event) => {
+      isPointerDown = true;
+      mutateFromPointer(event);
+    });
+
+    letterGrid.addEventListener("pointerover", mutateFromPointer);
+
+    letterGrid.addEventListener("pointermove", (event) => {
+      if (!isPointerDown && event.pointerType !== "mouse") {
+        return;
+      }
+      mutateFromPointer(event);
+    });
+
+    letterGrid.addEventListener("pointerleave", () => {
+      lastHoveredCell = null;
+    });
+
+    window.addEventListener("pointerup", () => {
+      isPointerDown = false;
+      lastHoveredCell = null;
+    });
+
+    window.addEventListener("pointercancel", () => {
+      isPointerDown = false;
+      lastHoveredCell = null;
+    });
+  }
+
+  if (controlScene && firstContactScene && conditionalsScene && storyGridWorld && conditionalsWrap) {
+    gsap.set(storyGridWorld, {
+      transformOrigin: "50% 50%",
+      scale: 1,
+      yPercent: 0,
+      autoAlpha: 0,
+      force3D: true
+    });
+
+    gsap.to(storyGridWorld, {
+      autoAlpha: 0.82,
+      ease: "none",
+      scrollTrigger: {
+        trigger: controlScene,
+        start: "top bottom",
+        end: "top top",
+        scrub: true
+      }
+    });
+
+    if (firstContactWrapper) {
+      gsap.set(firstContactWrapper, { xPercent: 0, yPercent: 0, scale: 1, autoAlpha: 0 });
+    }
+    gsap.set(conditionalsWrap, { autoAlpha: 0, yPercent: 18, scale: 0.92 });
+
+    const worldTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: controlScene,
+        endTrigger: conditionalsScene,
+        start: "top top",
+        end: "bottom+=35% bottom",
+        scrub: true
+      }
+    });
+
+    worldTimeline
+      .to(
+        storyGridWorld,
+        {
+          scale: 1,
+          yPercent: 0,
+          ease: "none",
+          duration: 0.28
+        },
+        0
+      )
+      .to(
+        storyGridWorld,
+        {
+          scale: 2.08,
+          yPercent: -66,
+          ease: "none",
+          duration: 0.45
+        },
+        0.28
+      )
+      .to(
+        storyGridWorld,
+        {
+          scale: 2.08,
+          yPercent: -66,
+          ease: "none",
+          duration: 0.3
+        },
+        0.73
+      )
+      .to(
+        storyGridWorld,
+        {
+          scale: 2.24,
+          yPercent: 0,
+          ease: "none",
+          duration: 0.55
+        },
+        1.03
+      )
+      .to(
+        controlWrap,
+        {
+          yPercent: -24,
+          autoAlpha: 0.45,
+          ease: "none",
+          duration: 0.38
+        },
+        0.28
+      )
+      .to(
+        sceneContainer,
+        {
+          xPercent: 12,
+          ease: "none",
+          duration: 0.38
+        },
+        0.28
+      )
+      .to(
+        conditionalsWrap,
+        {
+          autoAlpha: 1,
+          yPercent: 0,
+          scale: 1.04,
+          ease: "none",
+          duration: 0.12
+        },
+        1.66
+      );
+
+    if (firstContactWrapper) {
+      worldTimeline
+        .to(
+          firstContactWrapper,
+          {
+            autoAlpha: 1,
+            xPercent: -40,
+            yPercent: 16,
+            scale: 1.24,
+            ease: "none",
+            duration: 0.08
+          },
+          0.74
+        )
+        .to(
+          firstContactWrapper,
+          {
+            xPercent: -40,
+            yPercent: 16,
+            autoAlpha: 1,
+            ease: "none",
+            duration: 0.3
+          },
+          0.82
+        )
+        .to(
+          firstContactWrapper,
+          {
+            autoAlpha: 0,
+            ease: "none",
+            duration: 0.12
+          },
+          1.22
+        );
+    }
+  }
+
+  function makeInstance(word, amount, offset, wrapper) {
+    const templateElement = document.createElement("div");
+    templateElement.classList.add("first-contact-word-template");
+    templateElement.textContent = word;
+    wrapper.appendChild(templateElement);
+
+    for (let i = 0; i < amount; i += 1) {
+      const wordElement = document.createElement("div");
+      wordElement.classList.add("first-contact-word-instance");
+      wordElement.style.animationDelay = `${offset * i}s`;
+      wordElement.textContent = word;
+      wrapper.appendChild(wordElement);
+    }
   }
 });

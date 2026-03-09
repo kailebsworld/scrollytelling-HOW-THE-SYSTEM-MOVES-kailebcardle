@@ -9,6 +9,10 @@
   </head>
   <body>
     <main>
+      <div class="story-grid-world" aria-hidden="true">
+        <img class="story-grid-svg" src="assets/system-grid.svg" alt="" />
+      </div>
+
       <section class="section scroll-loader">
         <div class="preloader" id="preloader">
           <div class="pixel-grid">
@@ -95,6 +99,32 @@
                 <div class="face face--top"><p class="hi__word">THE SYSTEM</p></div>
                 <div class="face face--bottom"><p class="hi__word">THE SYSTEM</p></div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--first-contact" aria-label="First Contact Scene">
+        <div class="first-contact-room" aria-hidden="true"></div>
+        <a class="plug" href="http://www.philipbell.org" target="_blank" rel="noopener noreferrer">Bell.Studio</a>
+        <div class="section__content first-contact-copy">
+          <p class="chip chip--blue">02 FIRST CONTACT</p>
+          <h2>console.log / DevTools</h2>
+          <p class="first-contact-shift">Debugging becomes visibility, not magic.</p>
+        </div>
+        <div id="first-contact-wrapper" aria-hidden="true"></div>
+      </section>
+
+      <section class="section section--conditionals" aria-label="Conditionals Scene">
+        <div class="conditionals-grid-bg" aria-hidden="true"></div>
+        <div class="section__content conditionals-wrap">
+          <p class="conditionals-side">03 OPENING - DYNAMIC THINGS - CONDITIONALS</p>
+          <div class="conditionals-main">
+            <div class="conditionals-hint">Hover across letters to flip and mutate</div>
+            <div class="letter-grid-wrap">
+              <div id="main-container" class="letter-grid" aria-label="Interactive letter grid"></div>
+              <div class="grid-note grid-note--left">let selected = 'W'</div>
+              <div class="grid-note grid-note--right">const target = 'V'</div>
             </div>
           </div>
         </div>
