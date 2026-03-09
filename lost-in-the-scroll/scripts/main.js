@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (firstContactWrapper) {
-      gsap.set(firstContactWrapper, { xPercent: -40, yPercent: 40, scale: 1, autoAlpha: 0 });
+      gsap.set(firstContactWrapper, { xPercent: -24, yPercent: 24, scale: 1, autoAlpha: 0 });
     }
     gsap.set(conditionalsWrap, { autoAlpha: 1, yPercent: 0, scale: 1 });
     if (conditionalsSide) {
@@ -536,8 +536,8 @@ document.addEventListener("DOMContentLoaded", () => {
           firstContactWrapper,
           {
             autoAlpha: 1,
-            xPercent: -40,
-            yPercent: 8,
+            xPercent: -24,
+            yPercent: -3,
             scale: 1.24,
             ease: "none",
             duration: 0.08
@@ -547,8 +547,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .to(
           firstContactWrapper,
           {
-            xPercent: -40,
-            yPercent: 8,
+            xPercent: -24,
+            yPercent: -3,
             autoAlpha: 1,
             ease: "none",
             duration: 0.3
