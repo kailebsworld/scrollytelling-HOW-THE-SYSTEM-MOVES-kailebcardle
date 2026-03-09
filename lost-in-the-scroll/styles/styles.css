@@ -590,7 +590,7 @@ p,
 }
 
 .section--conditionals {
-  min-height: 180svh;
+  min-height: 230svh;
   background: transparent;
   overflow: hidden;
   padding-top: 10rem;
@@ -629,7 +629,7 @@ p,
   font-family: var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(247, 247, 247, 0.66);
+  color: rgba(247, 247, 247, 0.84);
   font-size: var(--font-size-small);
 }
 
@@ -656,7 +656,7 @@ p,
   font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(0.52rem, 0.82vw, 0.84rem);
-  color: rgba(247, 247, 247, 0.23);
+  color: rgba(247, 247, 247, 1);
   border-right: 1px solid rgba(247, 247, 247, 0.31);
   border-bottom: 1px solid rgba(247, 247, 247, 0.31);
   transform-style: preserve-3d;
@@ -900,7 +900,7 @@ p,
   }
 
   .section--conditionals {
-    min-height: 145svh;
+    min-height: 175svh;
     padding-top: 7rem;
   }
 

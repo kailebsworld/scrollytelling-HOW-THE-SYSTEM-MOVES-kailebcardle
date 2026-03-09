@@ -235,12 +235,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const letterGrid = document.getElementById("main-container");
   const conditionalsScene = document.querySelector(".section--conditionals");
   const conditionalsWrap = document.querySelector(".conditionals-wrap");
+  const conditionalsSide = document.querySelector(".conditionals-side");
+  const conditionalsMain = document.querySelector(".conditionals-main");
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   if (letterGrid) {
     const totalCells = 20 * 20;
     let isPointerDown = false;
     let lastHoveredCell = null;
+    let lastScrollStep = -1;
     const cells = [];
 
     for (let i = 0; i < totalCells; i += 1) {
@@ -351,6 +354,27 @@ document.addEventListener("DOMContentLoaded", () => {
       isPointerDown = false;
       lastHoveredCell = null;
     });
+
+    if (conditionalsScene) {
+      ScrollTrigger.create({
+        trigger: conditionalsScene,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+        onUpdate: (self) => {
+          const step = Math.floor(self.progress * 70);
+          if (step === lastScrollStep) {
+            return;
+          }
+          lastScrollStep = step;
+
+          const flipsPerStep = self.direction > 0 ? 5 : 3;
+          for (let i = 0; i < flipsPerStep; i += 1) {
+            mutateCell(cells[Math.floor(Math.random() * cells.length)]);
+          }
+        }
+      });
+    }
   }
 
   if (controlScene && firstContactScene && conditionalsScene && storyGridWorld && conditionalsWrap) {
@@ -374,9 +398,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (firstContactWrapper) {
-      gsap.set(firstContactWrapper, { xPercent: 0, yPercent: 0, scale: 1, autoAlpha: 0 });
+      gsap.set(firstContactWrapper, { xPercent: -40, yPercent: 40, scale: 1, autoAlpha: 0 });
     }
-    gsap.set(conditionalsWrap, { autoAlpha: 0, yPercent: 18, scale: 0.92 });
+    gsap.set(conditionalsWrap, { autoAlpha: 1, yPercent: 0, scale: 1 });
+    if (conditionalsSide) {
+      gsap.set(conditionalsSide, { autoAlpha: 0, yPercent: -160 });
+    }
+    if (conditionalsMain) {
+      gsap.set(conditionalsMain, { autoAlpha: 0, yPercent: -160 });
+    }
 
     const worldTimeline = gsap.timeline({
       scrollTrigger: {
@@ -422,12 +452,22 @@ document.addEventListener("DOMContentLoaded", () => {
       .to(
         storyGridWorld,
         {
-          scale: 2.24,
-          yPercent: 0,
+          scale: 1.58,
+          yPercent: -2,
           ease: "none",
           duration: 0.55
         },
         1.03
+      )
+      .to(
+        storyGridWorld,
+        {
+          scale: 1.58,
+          yPercent: -2,
+          ease: "none",
+          duration: 0.5
+        },
+        1.58
       )
       .to(
         controlWrap,
@@ -449,15 +489,24 @@ document.addEventListener("DOMContentLoaded", () => {
         0.28
       )
       .to(
-        conditionalsWrap,
+        [conditionalsSide, conditionalsMain].filter(Boolean),
         {
           autoAlpha: 1,
-          yPercent: 0,
-          scale: 1.04,
+          yPercent: 22,
           ease: "none",
-          duration: 0.12
+          duration: 0.34
         },
-        1.66
+        1.74
+      )
+      .to(
+        [conditionalsSide, conditionalsMain].filter(Boolean),
+        {
+          autoAlpha: 1,
+          yPercent: 22,
+          ease: "none",
+          duration: 0.9
+        },
+        2.08
       );
 
     if (firstContactWrapper) {
@@ -467,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
           {
             autoAlpha: 1,
             xPercent: -40,
-            yPercent: 16,
+            yPercent: 8,
             scale: 1.24,
             ease: "none",
             duration: 0.08
@@ -478,7 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
           firstContactWrapper,
           {
             xPercent: -40,
-            yPercent: 16,
+            yPercent: 8,
             autoAlpha: 1,
             ease: "none",
             duration: 0.3
