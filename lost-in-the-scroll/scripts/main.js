@@ -92,10 +92,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let winH = window.innerHeight;
 
   if (sceneContainer && cuboids.length && controlScene && controlWrap) {
+    const switchWordSets = [
+      ["I WANT", "TO CONTROL", "THE SYSTEM"],
+      ["IF TRUE", "KEEP CALM", "MODE A"],
+      ["ELSE", "TRIGGER CHAOS", "MODE B"],
+      ["CLASSLIST", "TOGGLE()", "SWITCH STATE"]
+    ];
+    let activeWordSetIndex = -1;
+
+    const setSceneWords = (words) => {
+      if (!sceneWords.length) {
+        return;
+      }
+
+      sceneWords.forEach((word, index) => {
+        const blockIndex = Math.floor(index / 4);
+        word.textContent = words[blockIndex] || words[words.length - 1];
+      });
+    };
+
+    const setSceneWordSet = (index) => {
+      if (index === activeWordSetIndex || !switchWordSets[index]) {
+        return;
+      }
+      activeWordSetIndex = index;
+      setSceneWords(switchWordSets[index]);
+    };
+
     gsap.set(sceneContainer, { autoAlpha: 1, xPercent: 22 });
     gsap.set(controlWrap, { autoAlpha: 0, y: 80, scale: 0.96 });
     gsap.set(cuboids, { yPercent: 80 });
     gsap.set(".control-side", { x: -35, autoAlpha: 0 });
+    setSceneWordSet(0);
 
     if (contentScene && contentInner && storyGridWorld && controlWrap) {
       gsap
@@ -237,6 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const conditionalsWrap = document.querySelector(".conditionals-wrap");
   const conditionalsSide = document.querySelector(".conditionals-side");
   const conditionalsMain = document.querySelector(".conditionals-main");
+  const switchScene = document.querySelector(".section--switch");
+  const switchWrap = document.querySelector(".switch-wrap");
+  const memoryScene = document.querySelector(".section--memory");
+  const memoryWrap = document.querySelector(".memory-wrap");
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   if (letterGrid) {
@@ -398,7 +430,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (controlScene && firstContactScene && conditionalsScene && storyGridWorld && conditionalsWrap) {
+  if (
+    controlScene &&
+    firstContactScene &&
+    conditionalsScene &&
+    switchScene &&
+    storyGridWorld &&
+    conditionalsWrap &&
+    switchWrap
+  ) {
     gsap.set(storyGridWorld, {
       transformOrigin: "50% 50%",
       scale: 1,
@@ -421,150 +461,200 @@ document.addEventListener("DOMContentLoaded", () => {
     if (firstContactWrapper) {
       gsap.set(firstContactWrapper, { xPercent: -24, yPercent: 24, scale: 1, autoAlpha: 0 });
     }
-    gsap.set(conditionalsWrap, { autoAlpha: 1, yPercent: 0, scale: 1 });
+    gsap.set(conditionalsWrap, {
+      autoAlpha: 1,
+      xPercent: -50,
+      yPercent: -50,
+      x: 0,
+      y: () => -winH * 1.4,
+      left: "50%",
+      top: "50%",
+      scale: 1
+    });
+    const getSwitchOffscreenX = () => (winW + switchWrap.offsetWidth) / 2 + 96;
+
+    gsap.set(switchWrap, {
+      autoAlpha: 0,
+      xPercent: -50,
+      yPercent: -50,
+      x: () => getSwitchOffscreenX(),
+      y: 0,
+      left: "50%",
+      top: "50%",
+      scale: 1
+    });
     if (conditionalsSide) {
-      gsap.set(conditionalsSide, { autoAlpha: 0, yPercent: -160 });
+      gsap.set(conditionalsSide, { autoAlpha: 1, yPercent: 0 });
     }
     if (conditionalsMain) {
-      gsap.set(conditionalsMain, { autoAlpha: 0, yPercent: -160 });
+      gsap.set(conditionalsMain, { autoAlpha: 1, yPercent: 0 });
     }
 
-    const worldTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: controlScene,
-        endTrigger: conditionalsScene,
-        start: "top top",
-        end: "bottom+=35% bottom",
-        scrub: true
+    const transitionTotal = 3.4;
+    const lerp = gsap.utils.interpolate;
+
+    ScrollTrigger.create({
+      trigger: controlScene,
+      endTrigger: switchScene,
+      start: "top top",
+      end: "bottom+=45% bottom",
+      scrub: true,
+      onUpdate: (self) => {
+        const t = self.progress * transitionTotal;
+
+        let gridScale = 1;
+        let gridYPercent = 0;
+
+        if (t <= 0.28) {
+          const p = clamp(t / 0.28);
+          gridScale = lerp(1, 2.08, p);
+          gridYPercent = lerp(0, -66, p);
+        } else if (t <= 1.03) {
+          gridScale = 2.08;
+          gridYPercent = -66;
+        } else if (t <= 1.26) {
+          const p = clamp((t - 1.03) / (1.26 - 1.03));
+          gridScale = lerp(2.08, 1.16, p);
+          gridYPercent = lerp(-66, 4, p);
+        } else if (t <= 1.96) {
+          gridScale = 1.16;
+          gridYPercent = 4;
+        } else if (t <= 3.04) {
+          const p = clamp((t - 1.96) / (3.04 - 1.96));
+          gridScale = lerp(1.16, 2.36, p);
+          gridYPercent = lerp(4, 74, p);
+        } else {
+          const p = clamp((t - 3.04) / (transitionTotal - 3.04));
+          gridScale = lerp(2.36, 2.62, p);
+          gridYPercent = lerp(74, 87, p);
+        }
+
+        gsap.set(storyGridWorld, {
+          scale: gridScale,
+          yPercent: gridYPercent
+        });
+
+        const controlP = clamp((t - 0.28) / (0.66 - 0.28));
+        gsap.set(controlWrap, {
+          yPercent: lerp(0, -24, controlP),
+          autoAlpha: lerp(1, 0.45, controlP)
+        });
+        gsap.set(sceneContainer, {
+          xPercent: lerp(22, 12, controlP)
+        });
+
+        let conditionalsY = -winH * 1.4;
+        if (t <= 1.26) {
+          conditionalsY = -winH * 1.4;
+        } else if (t <= 1.58) {
+          const p = clamp((t - 1.26) / (1.58 - 1.26));
+          conditionalsY = lerp(-winH * 1.4, 0, p);
+        } else if (t <= 1.96) {
+          conditionalsY = 0;
+        } else {
+          const p = clamp((t - 1.96) / (3.04 - 1.96));
+          conditionalsY = lerp(0, winH * 2.35, p);
+        }
+
+        gsap.set(conditionalsWrap, { y: conditionalsY });
+
+        let switchAlpha = 0;
+        let switchX = getSwitchOffscreenX();
+        const switchInStart = 2.04;
+        const switchInEnd = 3.04;
+
+        if (t <= switchInStart) {
+          switchAlpha = 0;
+          switchX = getSwitchOffscreenX();
+        } else if (t <= switchInEnd) {
+          const p = clamp((t - switchInStart) / (switchInEnd - switchInStart));
+          switchAlpha = lerp(0, 1, p);
+          switchX = lerp(getSwitchOffscreenX(), 0, p);
+        } else {
+          switchAlpha = 1;
+          switchX = 0;
+        }
+
+        gsap.set(switchWrap, {
+          autoAlpha: switchAlpha,
+          x: switchX,
+          y: 0,
+          scale: 1
+        });
+
+        if (firstContactWrapper) {
+          let contactAlpha = 0;
+          if (t > 0.74 && t <= 0.82) {
+            const p = clamp((t - 0.74) / (0.82 - 0.74));
+            contactAlpha = lerp(0, 1, p);
+          } else if (t <= 1.12) {
+            contactAlpha = t >= 0.82 ? 1 : 0;
+          } else if (t <= 1.22) {
+            const p = clamp((t - 1.12) / (1.22 - 1.12));
+            contactAlpha = lerp(1, 0, p);
+          }
+
+          gsap.set(firstContactWrapper, {
+            autoAlpha: contactAlpha,
+            xPercent: -24,
+            yPercent: -3,
+            scale: 1.24
+          });
+        }
       }
     });
+  }
 
-    worldTimeline
-      .to(
-        storyGridWorld,
-        {
-          scale: 1,
-          yPercent: 0,
-          ease: "none",
-          duration: 0.28
-        },
-        0
-      )
-      .to(
-        storyGridWorld,
-        {
-          scale: 2.08,
-          yPercent: -66,
-          ease: "none",
-          duration: 0.45
-        },
-        0.28
-      )
-      .to(
-        storyGridWorld,
-        {
-          scale: 2.08,
-          yPercent: -66,
-          ease: "none",
-          duration: 0.3
-        },
-        0.73
-      )
-      .to(
-        storyGridWorld,
-        {
-          scale: 1.58,
-          yPercent: -2,
-          ease: "none",
-          duration: 0.55
-        },
-        1.03
-      )
-      .to(
-        storyGridWorld,
-        {
-          scale: 1.58,
-          yPercent: -2,
-          ease: "none",
-          duration: 0.5
-        },
-        1.58
-      )
-      .to(
-        controlWrap,
-        {
-          yPercent: -24,
-          autoAlpha: 0.45,
-          ease: "none",
-          duration: 0.38
-        },
-        0.28
-      )
-      .to(
-        sceneContainer,
-        {
-          xPercent: 12,
-          ease: "none",
-          duration: 0.38
-        },
-        0.28
-      )
-      .to(
-        [conditionalsSide, conditionalsMain].filter(Boolean),
-        {
-          autoAlpha: 1,
-          yPercent: 22,
-          ease: "none",
-          duration: 0.34
-        },
-        1.74
-      )
-      .to(
-        [conditionalsSide, conditionalsMain].filter(Boolean),
-        {
-          autoAlpha: 1,
-          yPercent: 22,
-          ease: "none",
-          duration: 0.9
-        },
-        2.08
-      );
+  if (switchScene && memoryScene && switchWrap && memoryWrap && storyGridWorld) {
+    const lerp = gsap.utils.interpolate;
 
-    if (firstContactWrapper) {
-      worldTimeline
-        .to(
-          firstContactWrapper,
-          {
-            autoAlpha: 1,
-            xPercent: -24,
-            yPercent: -3,
-            scale: 1.24,
-            ease: "none",
-            duration: 0.08
-          },
-          0.74
-        )
-        .to(
-          firstContactWrapper,
-          {
-            xPercent: -24,
-            yPercent: -3,
-            autoAlpha: 1,
-            ease: "none",
-            duration: 0.3
-          },
-          0.82
-        )
-        .to(
-          firstContactWrapper,
-          {
-            autoAlpha: 0,
-            ease: "none",
-            duration: 0.12
-          },
-          1.22
-        );
-    }
+    gsap.set(memoryWrap, {
+      autoAlpha: 0,
+      xPercent: -50,
+      yPercent: -50,
+      x: 0,
+      y: 0,
+      left: "50%",
+      top: "50%",
+      scale: 1
+    });
+
+    ScrollTrigger.create({
+      trigger: switchScene,
+      start: "bottom+=45% bottom",
+      endTrigger: memoryScene,
+      end: "top top",
+      scrub: true,
+      onUpdate: (self) => {
+        const p = clamp(self.progress);
+        const teardown = clamp((p - 0.82) / 0.18);
+        const memoryIn = clamp((p - 0.88) / 0.12);
+
+        if (
+          window.switchTorusControls &&
+          typeof window.switchTorusControls.setDiveProgress === "function"
+        ) {
+          window.switchTorusControls.setDiveProgress(p);
+        }
+
+        gsap.set(storyGridWorld, {
+          autoAlpha: lerp(0.82, 0, teardown)
+        });
+
+        gsap.set(switchWrap, {
+          autoAlpha: lerp(1, 0, teardown),
+          x: 0,
+          y: 0,
+          scale: 1
+        });
+
+        gsap.set(memoryWrap, {
+          autoAlpha: memoryIn,
+          y: 0,
+          scale: 1
+        });
+      }
+    });
   }
 
   function makeInstance(word, amount, offset, wrapper) {
