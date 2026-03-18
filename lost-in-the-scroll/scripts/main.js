@@ -269,15 +269,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const switchWrap = document.querySelector(".switch-wrap");
   const memoryScene = document.querySelector(".section--memory");
   const memoryWrap = document.querySelector(".memory-wrap");
+  const closingScene = document.querySelector(".section--closing");
+  const closingWrap = document.querySelector(".closing-wrap");
+  const closingMain = document.querySelector(".closing-main");
+  const mainElement = document.querySelector("main");
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let conditionalsGridController = null;
 
   if (letterGrid) {
     const GRID_SIZE = 20;
     const totalCells = 20 * 20;
+    const exitPhraseChars = "03 LET CONST ".split("");
     let isPointerDown = false;
     let lastHoveredCell = null;
     let lastScrollStep = -1;
+    let exitPhraseAppliedCount = 0;
+    let exitPhraseProgress = 0;
     const cells = [];
+    const exitOrder = Array.from({ length: totalCells }, (_, index) => index);
+
+    for (let i = exitOrder.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [exitOrder[i], exitOrder[j]] = [exitOrder[j], exitOrder[i]];
+    }
 
     for (let i = 0; i < totalCells; i += 1) {
       const span = document.createElement("span");
@@ -307,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
       warningCell.classList.add("is-warning");
     }
 
-    const mutateCell = (cell) => {
+    const mutateCell = (cell, forcedChar = null, ignorePinned = false) => {
       if (!cell || !cell.classList.contains("letter-cell")) {
         return;
       }
@@ -319,7 +333,9 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.classList.contains("is-target") ||
         cell.classList.contains("is-warning");
 
-      if (!isPinnedCell) {
+      if (typeof forcedChar === "string") {
+        nextLetter = forcedChar;
+      } else if (!isPinnedCell || ignorePinned) {
         while (nextLetter === currentLetter) {
           nextLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
         }
@@ -350,6 +366,35 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       );
+    };
+
+    const setExitPhraseProgress = (progress) => {
+      const clampedProgress = clamp(progress);
+      const nextCount = Math.floor(clampedProgress * cells.length);
+      exitPhraseProgress = clampedProgress;
+
+      if (nextCount === exitPhraseAppliedCount) {
+        return;
+      }
+
+      if (nextCount > exitPhraseAppliedCount) {
+        for (let i = exitPhraseAppliedCount; i < nextCount; i += 1) {
+          const cellIndex = exitOrder[i];
+          const phraseChar = exitPhraseChars[cellIndex % exitPhraseChars.length];
+          mutateCell(cells[cellIndex], phraseChar, true);
+        }
+      } else {
+        for (let i = nextCount; i < exitPhraseAppliedCount; i += 1) {
+          const cellIndex = exitOrder[i];
+          mutateCell(cells[cellIndex], null, true);
+        }
+      }
+
+      exitPhraseAppliedCount = nextCount;
+    };
+
+    conditionalsGridController = {
+      setExitPhraseProgress
     };
 
     const mutateFromPointer = (event) => {
@@ -415,6 +460,10 @@ document.addEventListener("DOMContentLoaded", () => {
         end: "bottom top",
         scrub: true,
         onUpdate: (self) => {
+          if (exitPhraseProgress > 0.01) {
+            return;
+          }
+
           const step = Math.floor(self.progress * 70);
           if (step === lastScrollStep) {
             return;
@@ -459,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (firstContactWrapper) {
-      gsap.set(firstContactWrapper, { xPercent: -24, yPercent: 24, scale: 1, autoAlpha: 0 });
+      gsap.set(firstContactWrapper, { xPercent: -30, yPercent: 24, scale: 1, autoAlpha: 0 });
     }
     gsap.set(conditionalsWrap, {
       autoAlpha: 1,
@@ -556,6 +605,11 @@ document.addEventListener("DOMContentLoaded", () => {
           conditionalsY = lerp(0, winH * 2.35, p);
         }
 
+        if (conditionalsGridController?.setExitPhraseProgress) {
+          const exitProgress = clamp((t - 1.96) / (3.04 - 1.96));
+          conditionalsGridController.setExitPhraseProgress(exitProgress);
+        }
+
         gsap.set(conditionalsWrap, { y: conditionalsY });
 
         let switchAlpha = 0;
@@ -596,7 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           gsap.set(firstContactWrapper, {
             autoAlpha: contactAlpha,
-            xPercent: -24,
+            xPercent: -30,
             yPercent: -3,
             scale: 1.24
           });
@@ -654,6 +708,169 @@ document.addEventListener("DOMContentLoaded", () => {
           scale: 1
         });
       }
+    });
+  }
+
+  if (memoryScene && closingScene && memoryWrap && closingWrap) {
+    const lerp = gsap.utils.interpolate;
+
+    gsap.set(closingWrap, {
+      autoAlpha: 0,
+      xPercent: -50,
+      yPercent: -50,
+      x: 0,
+      y: 0,
+      left: "50%",
+      top: "50%",
+      scale: 0.84,
+      filter: "blur(16px)"
+    });
+
+    if (closingMain) {
+      gsap.set(closingMain, {
+        xPercent: 8,
+        rotateY: 9,
+        rotateX: -4,
+        transformPerspective: 1200,
+        transformOrigin: "50% 50%"
+      });
+    }
+
+    ScrollTrigger.create({
+      trigger: memoryScene,
+      start: "bottom-=24% bottom",
+      endTrigger: closingScene,
+      end: "top top",
+      scrub: true,
+      onUpdate: (self) => {
+        const p = clamp(self.progress);
+        const closeIn = clamp((p - 0.06) / 0.94);
+
+        gsap.set(memoryWrap, {
+          autoAlpha: lerp(1, 0, closeIn),
+          y: lerp(0, -90, closeIn),
+          scale: lerp(1, 1.12, closeIn),
+          filter: `blur(${lerp(0, 10, closeIn)}px)`
+        });
+
+        gsap.set(closingWrap, {
+          autoAlpha: closeIn,
+          scale: lerp(0.84, 1, closeIn),
+          filter: `blur(${lerp(16, 0, closeIn)}px)`
+        });
+
+        if (closingMain) {
+          gsap.set(closingMain, {
+            xPercent: lerp(8, 0, closeIn),
+            rotateY: lerp(9, 0, closeIn),
+            rotateX: lerp(-4, 0, closeIn)
+          });
+        }
+
+        if (
+          window.closingGlitchControls &&
+          typeof window.closingGlitchControls.setProgress === "function"
+        ) {
+          window.closingGlitchControls.setProgress(closeIn);
+        }
+      }
+    });
+
+    if (closingMain) {
+      ScrollTrigger.create({
+        trigger: closingScene,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+        onUpdate: (self) => {
+          const p = clamp(self.progress);
+          gsap.set(closingMain, {
+            scale: lerp(1, 1.06, p)
+          });
+
+          if (
+            window.closingGlitchControls &&
+            typeof window.closingGlitchControls.setProgress === "function"
+          ) {
+            window.closingGlitchControls.setProgress(clamp(0.42 + p * 0.58));
+          }
+        }
+      });
+    }
+  }
+
+  if (mainElement && closingScene) {
+    let loopLocked = false;
+    let lastLoopAt = 0;
+    const LOOP_COOLDOWN_MS = 1200;
+    const REBOOT_GLITCH_MS = 1280;
+    const REBOOT_RELEASE_MS = 1680;
+    let rebootJumpTimer = 0;
+    let rebootReleaseTimer = 0;
+
+    const loopToStart = () => {
+      const now = Date.now();
+      if (loopLocked || now - lastLoopAt < LOOP_COOLDOWN_MS) {
+        return;
+      }
+      if (document.body.classList.contains("narrative-overlay-open")) {
+        return;
+      }
+
+      loopLocked = true;
+      lastLoopAt = now;
+      document.body.classList.add("system-reboot");
+
+      if (
+        window.switchTorusControls &&
+        typeof window.switchTorusControls.setDiveProgress === "function"
+      ) {
+        window.switchTorusControls.setDiveProgress(1);
+      }
+
+      if (
+        window.closingGlitchControls &&
+        typeof window.closingGlitchControls.setMode === "function"
+      ) {
+        window.closingGlitchControls.setMode("binary");
+      }
+
+      window.clearTimeout(rebootJumpTimer);
+      window.clearTimeout(rebootReleaseTimer);
+
+      rebootJumpTimer = window.setTimeout(() => {
+        if (
+          window.switchTorusControls &&
+          typeof window.switchTorusControls.setDiveProgress === "function"
+        ) {
+          window.switchTorusControls.setDiveProgress(0);
+        }
+
+        if (
+          window.closingGlitchControls &&
+          typeof window.closingGlitchControls.setProgress === "function"
+        ) {
+          window.closingGlitchControls.setProgress(0);
+        }
+
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+        });
+      }, REBOOT_GLITCH_MS);
+
+      rebootReleaseTimer = window.setTimeout(() => {
+        document.body.classList.remove("system-reboot");
+        loopLocked = false;
+      }, REBOOT_RELEASE_MS);
+    };
+
+    ScrollTrigger.create({
+      trigger: mainElement,
+      start: "bottom bottom",
+      end: "bottom bottom",
+      onEnter: loopToStart
     });
   }
 

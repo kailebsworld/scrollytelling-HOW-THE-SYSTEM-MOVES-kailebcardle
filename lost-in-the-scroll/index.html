@@ -78,7 +78,9 @@
       <section class="section section--control control-scene" aria-label="Opening Control Scene">
         <div class="wire-grid" aria-hidden="true"></div>
         <div class="section__content control-wrap">
-          <p class="control-side">01 OPENING I WANT CONTROL</p>
+          <p class="control-side narrative-trigger" data-narrative-step="01" role="button" tabindex="0">
+            01 OPENING I WANT CONTROL
+          </p>
           <div class="container">
             <div class="hi">
               <div class="hi__cuboid">
@@ -107,7 +109,9 @@
       <section class="section section--first-contact" aria-label="First Contact Scene">
         <div class="first-contact-room" aria-hidden="true"></div>
         <div class="section__content first-contact-copy">
-          <p class="first-contact-side">02 FIRST CONTACT</p>
+          <p class="first-contact-side narrative-trigger" data-narrative-step="02" role="button" tabindex="0">
+            02 FIRST CONTACT
+          </p>
         </div>
         <div id="first-contact-wrapper" aria-hidden="true"></div>
       </section>
@@ -115,9 +119,10 @@
       <section class="section section--conditionals" aria-label="Conditionals Scene">
         <div class="conditionals-grid-bg" aria-hidden="true"></div>
         <div class="section__content conditionals-wrap">
-          <p class="conditionals-side">03 OPENING - DYNAMIC THINGS - CONDITIONALS</p>
+          <p class="conditionals-side narrative-trigger" data-narrative-step="03" role="button" tabindex="0">
+            03 OPENING - DYNAMIC THINGS - CONDITIONALS
+          </p>
           <div class="conditionals-main">
-            <div class="conditionals-hint">Hover across letters to flip and mutate</div>
             <div class="letter-grid-wrap">
               <div id="main-container" class="letter-grid" aria-label="Interactive letter grid"></div>
               <div class="grid-note grid-note--left">let selected = 'W'</div>
@@ -129,7 +134,7 @@
 
       <section class="section section--switch" aria-label="Switch Scene">
         <div class="section__content switch-wrap">
-          <p class="switch-side">04 THE SWITCH</p>
+          <p class="switch-side narrative-trigger" data-narrative-step="04" role="button" tabindex="0">04 THE SWITCH</p>
           <div class="switch-main" aria-hidden="true">
             <div id="switch-kinetic" class="kinetic-text"></div>
           </div>
@@ -138,13 +143,65 @@
 
       <section class="section section--memory" aria-label="Memory Scene">
         <div class="section__content memory-wrap">
-          <p class="memory-side">05 THE MEMORY - LOCALSTORAGE</p>
+          <p class="memory-side narrative-trigger" data-narrative-step="05" role="button" tabindex="0">
+            05 THE MEMORY - LOCALSTORAGE
+          </p>
           <div class="memory-main">
             <div id="memory-bg-3d" class="memory-bg-3d" aria-hidden="true"></div>
             <div id="memory-word-wave" class="memory-word-wave" aria-hidden="true"></div>
           </div>
         </div>
       </section>
+
+      <section class="section section--closing" aria-label="Closing Scene">
+        <div class="section__content closing-wrap">
+          <p class="closing-side narrative-trigger" data-narrative-step="06" role="button" tabindex="0">
+            06 CLOSING - CHOREOGRAPHY &gt; CONTROL
+          </p>
+          <div class="closing-main">
+            <div class="closing-fx closing-fx--halo" aria-hidden="true"></div>
+            <div class="closing-fx closing-fx--scan" aria-hidden="true"></div>
+            <div class="closing-text-container">
+              <p id="closing-transitioned-text" class="closing-transitioned-element">
+                I don't control it fully, but I can choreograph it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="narrative-overlay" class="narrative-overlay" hidden>
+        <div class="narrative-overlay__scrim" data-overlay-dismiss></div>
+        <article class="narrative-panel" role="dialog" aria-modal="true" aria-labelledby="narrative-title">
+          <header id="narrative-header" class="narrative-panel__header">
+            <h2 id="narrative-title">Narrative Step</h2>
+          </header>
+          <div class="narrative-panel__body">
+            <section class="narrative-grid">
+              <div class="narrative-block">
+                <div class="narrative-label narrative-label--meta">METAPHOR MOMENT</div>
+                <p id="narrative-metaphor" class="narrative-copy"></p>
+              </div>
+              <div class="narrative-block">
+                <div class="narrative-label narrative-label--js">JS CONCEPT</div>
+                <p id="narrative-js" class="narrative-copy narrative-copy--mono"></p>
+              </div>
+            </section>
+            <div class="narrative-divider"></div>
+            <section class="narrative-block">
+              <div class="narrative-label narrative-label--shifted">WHAT SHIFTED</div>
+              <p id="narrative-shifted" class="narrative-copy narrative-copy--italic"></p>
+            </section>
+          </div>
+        </article>
+      </div>
+
+      <div id="system-reboot-overlay" class="system-reboot-overlay" aria-hidden="true">
+        <div class="system-reboot-overlay__inner">
+          <p class="system-reboot-overlay__title">SYSTEM REBOOT</p>
+          <p class="system-reboot-overlay__subtitle">REINITIALIZING LOOP</p>
+        </div>
+      </div>
 
     </main>
 
@@ -154,5 +211,7 @@
     <script type="module" src="scripts/switch-torus.js"></script>
     <script type="module" src="scripts/memory-flow-bg.js"></script>
     <script src="scripts/memory-weave.js"></script>
+    <script src="scripts/closing-glitch.js"></script>
+    <script src="scripts/narrative-overlay.js"></script>
   </body>
 </html>
