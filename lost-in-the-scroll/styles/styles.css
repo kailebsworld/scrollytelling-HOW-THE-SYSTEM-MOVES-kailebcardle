@@ -57,6 +57,55 @@ body.torus-invert .narrative-trigger:not(:hover):not(:focus-visible) {
   text-shadow: none;
 }
 
+body.torus-invert .preloader {
+  background: #fff;
+}
+
+body.torus-invert .block {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+body.torus-invert .counter-outline {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+}
+
+body.torus-invert .system-messages {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+body.torus-invert .loading-bar {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+body.torus-invert .loading-bar-markers {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+body.torus-invert .control-side {
+  color: rgba(11, 11, 11, 0.92);
+}
+
+body.torus-invert .face--front,
+body.torus-invert .face--back {
+  background: #0b0b0b;
+}
+
+body.torus-invert .face--top,
+body.torus-invert .face--bottom {
+  background: #f7f7f7;
+}
+
+body.torus-invert .face--front .hi__word,
+body.torus-invert .face--back .hi__word {
+  color: #f7f7f7;
+}
+
+body.torus-invert .face--top .hi__word,
+body.torus-invert .face--bottom .hi__word {
+  color: #0b0b0b;
+}
+
 body.narrative-overlay-open {
   overflow: hidden;
 }
@@ -580,7 +629,7 @@ p,
   top: 0;
   height: 100svh;
   width: 100%;
-  background: radial-gradient(circle at 50% 36%, #111217 0%, #0a0b0f 68%);
+  background: #000;
   overflow: hidden;
 }
 
@@ -633,8 +682,8 @@ p,
 
 .block {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--color-border-soft);
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   transform: scale(0);
   transform-origin: center;
 }
@@ -698,7 +747,7 @@ p,
   left: 50%;
   transform: translateX(-50%);
   color: transparent;
-  -webkit-text-stroke: 1px rgba(247, 247, 247, 0.12);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
   z-index: 1;
 }
 
@@ -718,7 +767,7 @@ p,
 .system-messages {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   height: 1.5em;
   overflow: hidden;
 }
@@ -741,7 +790,7 @@ p,
 
 .loading-bar {
   height: 3px;
-  background: rgba(247, 247, 247, 0.12);
+  background: rgba(255, 255, 255, 0.16);
   margin-bottom: var(--space-xs);
 }
 
@@ -755,7 +804,7 @@ p,
   display: flex;
   justify-content: space-between;
   font-size: var(--font-size-small);
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   position: relative;
 }
 
